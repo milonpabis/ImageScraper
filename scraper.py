@@ -9,23 +9,25 @@ import requests
 
 COOKIE_ACCEPT = '/html/body/c-wiz/div/div/div/div[2]/div[1]/div[3]/div[1]/div[1]/form[2]/div/div/button'
 MORE_BUTTON = '//*[@id="islmp"]/div/div/div[1]/div/div[2]/span'
-SCROLLS = 8
-DIR = r'F:\Desktop\im'
+SCROLLS = 9
+DIR = 'product'
 
 
 class Scraper:
 
-    def __init__(self, image_name):
+    def __init__(self, image_name, directory=DIR):
 
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--headless")
 
+        self.dir = directory
         self.name = image_name
         self.endpoint = f'https://www.google.com/search?rlz=1C1YTUH_plPL1051PL1051&q={self.name}&tbm=isch&sa=X&ved' \
                         f'=2ahUKEwjXg4Phle3_AhWQgSoKHb78AW0Q0pQJegQICxAB&biw=1182&bih=754&dpr=1.25 '
-        self.path = f'{DIR}\\{self.name}'
+        self.path = f'{self.dir}\\{self.name}'
+        print(self.path)
 
-        self.driver = webdriver.Chrome()
+        self.driver = webdriver.Chrome(options=chrome_options)
         self.execute_and_encode()
 
 
@@ -104,3 +106,4 @@ class Scraper:
                         file.write(respond.content)
                 counter += 1
         time.sleep(3)
+        print('finished')

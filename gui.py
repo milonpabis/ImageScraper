@@ -12,6 +12,7 @@ class Gui(QMainWindow):
 
     def __init__(self):
         super().__init__()
+        self.directory = 'product'
         self.setWindowTitle("GoogleImageScraper")
         self.setFixedSize(QSize(400, 600))
         self.setWindowIcon(QIcon(LOGO))
@@ -49,6 +50,13 @@ class Gui(QMainWindow):
         main_text1.setStyleSheet("color: white;")
 
 
+        main_text2 = QLabel("Choose directory:")
+        main_text2.setContentsMargins(0, 0, 0, 5)
+        main_text2.setFont(QFont("Times", 14, QFont.Bold))
+        main_text2.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        main_text2.setStyleSheet("color: white;")
+
+
         self.input = QLineEdit()
         self.input.setFixedSize(QSize(150, 30))
         self.input.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -58,9 +66,17 @@ class Gui(QMainWindow):
         self.button.setIcon(QIcon('images/button.png'))
         self.button.setIconSize(QSize(80, 80))
         self.button.setFixedSize(QSize(80, 80))
-        self.button.setStyleSheet('border-radius: {}px;'.format(650 // 2))
-
+        self.button.setStyleSheet('border-radius: {}px;'.format(80 // 2))
         self.button.pressed.connect(self.button_clicked)
+
+
+        self.dir_button = QPushButton()
+        self.dir_button.setIcon(QIcon('images/directory.png'))
+        self.dir_button.setFixedSize(QSize(40, 40))
+        self.dir_button.setIconSize(QSize(40, 40))
+        self.dir_button.setStyleSheet('border-radius: {}px;'.format(40 // 2))
+        self.dir_button.pressed.connect(self.dir_change)
+
 
 
 
@@ -68,6 +84,8 @@ class Gui(QMainWindow):
 
         grid.addWidget(logo, alignment=Qt.AlignmentFlag.AlignHCenter)
         grid.addWidget(main_text, alignment=Qt.AlignmentFlag.AlignTop)
+        grid.addWidget(main_text2, alignment=Qt.AlignmentFlag.AlignBottom)
+        grid.addWidget(self.dir_button, alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter)
         grid.addWidget(main_text1, alignment=Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignHCenter)
         grid.addWidget(self.input, alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter)
         grid.addWidget(self.button, alignment=Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
@@ -81,8 +99,12 @@ class Gui(QMainWindow):
         item = self.input.text()
         if len(item) > 1:
             self.button.setEnabled(False)
-            thread = ScraperThread(item)
+            thread = ScraperThread(item, self.directory)
             self.pool.start(thread)
+
+    def dir_change(self):
+        dialog = QFileDialog().getExistingDirectory()
+        self.directory = dialog
 
 
 
@@ -103,13 +125,15 @@ class Image(QLabel):
 
 class ScraperThread(QRunnable):
 
-    def __init__(self, item):
+    def __init__(self, item, directory):
         super().__init__()
         self.item = item
+        self.directory = directory
 
     @Slot()
     def run(self):
-        Scraper(self.item)
+        Scraper(self.item, self.directory)
+
 
 
 
