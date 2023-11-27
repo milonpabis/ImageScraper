@@ -16,7 +16,7 @@ class Gui(QMainWindow):
         self.setWindowTitle("GoogleImageScraper")
         self.setFixedSize(QSize(400, 600))
         self.setWindowIcon(QIcon(LOGO))
-        self.pool = QThreadPool()
+        #self.pool = QThreadPool()
 
         # ---------------------------------------------------------------------- WINDOW GRADIENT
         gradient = QLinearGradient(0, 0, 0, self.height())
@@ -62,6 +62,11 @@ class Gui(QMainWindow):
         self.input.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.input.setStyleSheet("border: 1px solid gray;")
 
+        self.input2 = QLineEdit()
+        self.input2.setFixedSize(QSize(150, 30))
+        self.input2.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.input2.setStyleSheet("border: 1px solid gray;")
+
         self.button = QPushButton()
         self.button.setIcon(QIcon('images/button.png'))
         self.button.setIconSize(QSize(80, 80))
@@ -88,6 +93,7 @@ class Gui(QMainWindow):
         grid.addWidget(self.dir_button, alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter)
         grid.addWidget(main_text1, alignment=Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignHCenter)
         grid.addWidget(self.input, alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter)
+        grid.addWidget(self.input2, alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter)
         grid.addWidget(self.button, alignment=Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
 
         label.setLayout(grid)
@@ -97,10 +103,18 @@ class Gui(QMainWindow):
 
     def button_clicked(self):
         item = self.input.text()
-        if len(item) > 1:
+        item2 = self.input2.text()
+        if len(item) > 1 and len(item2) > 1:
             self.button.setEnabled(False)
-            thread = ScraperThread(item, self.directory)
-            self.pool.start(thread)
+            #thread = ScraperThread(item, self.directory)
+            #self.pool.start(thread)
+            thread = threading.Thread(target=self.run_task, args=(item, self.directory))
+            thread2 = threading.Thread(target=self.run_task, args=(item2, self.directory))
+            thread.start()
+            thread2.start()
+
+    def run_task(self, text, dir):
+        Scraper(text, dir)
 
     def dir_change(self):
         dialog = QFileDialog().getExistingDirectory()

@@ -13,6 +13,8 @@ SCROLLS = 9
 DIR = 'product'
 
 
+
+
 class Scraper:
 
     def __init__(self, image_name, directory=DIR):
@@ -27,7 +29,7 @@ class Scraper:
         self.path = f'{self.dir}\\{self.name}'
         print(self.path)
 
-        self.driver = webdriver.Chrome(options=chrome_options)
+        self.driver = webdriver.Chrome()
         self.execute_and_encode()
 
 

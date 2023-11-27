@@ -8,12 +8,12 @@ from gui import Gui, QApplication
 # - getting default user path to desktop
 
 #scraper = Scraper('Pilka')
+if __name__ == "__main__":
+    app = QApplication()
+    gui = Gui()
+    gui.show()
 
-app = QApplication()
-gui = Gui()
-gui.show()
-
-app.exec()
+    app.exec()
 
 
 
