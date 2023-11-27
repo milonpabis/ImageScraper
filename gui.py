@@ -1,7 +1,7 @@
 from PySide6.QtGui import (QIcon, QColor, QFont, QImage, QPixmap, QLinearGradient, QPalette)
 from PySide6.QtCore import Qt, QSize, QThread, Signal, QRunnable, QThreadPool, Slot
 from PySide6.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QSlider, QLabel, QFileDialog,
-                               QPushButton, QVBoxLayout, QLineEdit)
+                               QPushButton, QVBoxLayout, QLineEdit, QTextEdit)
 import threading
 from scraper import Scraper
 
@@ -57,15 +57,20 @@ class Gui(QMainWindow):
         main_text2.setStyleSheet("color: white;")
 
 
-        self.input = QLineEdit()
-        self.input.setFixedSize(QSize(150, 30))
+        #self.input = QLineEdit()
+        #self.input.setFixedSize(QSize(150, 30))
+        #self.input.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        #self.input.setStyleSheet("border: 1px solid gray;")
+
+        self.input = QTextEdit()
+        self.input.setFixedSize(QSize(200, 200))
         self.input.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.input.setStyleSheet("border: 1px solid gray;")
 
-        self.input2 = QLineEdit()
-        self.input2.setFixedSize(QSize(150, 30))
-        self.input2.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.input2.setStyleSheet("border: 1px solid gray;")
+        #self.input2 = QLineEdit()
+        #self.input2.setFixedSize(QSize(150, 30))
+        #self.input2.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        #self.input2.setStyleSheet("border: 1px solid gray;")
 
         self.button = QPushButton()
         self.button.setIcon(QIcon('images/button.png'))
@@ -93,7 +98,7 @@ class Gui(QMainWindow):
         grid.addWidget(self.dir_button, alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter)
         grid.addWidget(main_text1, alignment=Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignHCenter)
         grid.addWidget(self.input, alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter)
-        grid.addWidget(self.input2, alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter)
+        #grid.addWidget(self.input2, alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter)
         grid.addWidget(self.button, alignment=Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
 
         label.setLayout(grid)
@@ -102,19 +107,17 @@ class Gui(QMainWindow):
 
 
     def button_clicked(self):
-        item = self.input.text()
-        item2 = self.input2.text()
-        if len(item) > 1 and len(item2) > 1:
+        items = self.input.toPlainText().split("\n")
+        print(items)
+        if len(items) > 0:
             self.button.setEnabled(False)
-            #thread = ScraperThread(item, self.directory)
-            #self.pool.start(thread)
-            thread = threading.Thread(target=self.run_task, args=(item, self.directory))
-            thread2 = threading.Thread(target=self.run_task, args=(item2, self.directory))
-            thread.start()
-            thread2.start()
+            for item in items:
+                if item not in ["", "\n", " "]:
+                    thread = threading.Thread(target=self.run_task, args=(item, self.directory))
+                    thread.start()
 
-    def run_task(self, text, dir):
-        Scraper(text, dir)
+    def run_task(self, text, directory):
+        Scraper(text, directory)
 
     def dir_change(self):
         dialog = QFileDialog().getExistingDirectory()

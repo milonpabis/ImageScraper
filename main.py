@@ -1,4 +1,5 @@
 from gui import Gui, QApplication
+#from scraper import Scraper
 
 
 
@@ -9,6 +10,7 @@ from gui import Gui, QApplication
 
 #scraper = Scraper('Pilka')
 if __name__ == "__main__":
+    #Scraper("card queen of spades")
     app = QApplication()
     gui = Gui()
     gui.show()
