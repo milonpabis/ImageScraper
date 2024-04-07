@@ -17,12 +17,12 @@ class ScraperV2:
         self.output = output_path
 
     
-    def run(self, word: str, num: int) -> None:
-        urls = self._get_urls(word, num)
+    def run(self, word: str, num: int, hq: bool = True) -> None:
+        urls = self._get_urls(word, num, hq=hq)
         self._download_images(urls)
 
     
-    def _get_urls(self, word: str, num: int) -> list[str]:
+    def _get_urls(self, word: str, num: int, hq: bool = True) -> list[str]:
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--lang=en-GB")
         driver = webdriver.Chrome(chrome_options)
@@ -34,9 +34,13 @@ class ScraperV2:
             print(e)
 
         images = driver.find_elements(By.TAG_NAME, "img")
+        while len(images) < num:
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            sleep(1)
+            images = driver.find_elements(By.TAG_NAME, "img")
 
         urls = [image.get_attribute("src") for image in images]
-        clean_urls = self._filter_urls(urls)
+        clean_urls = self._filter_urls(urls, hq=hq)
 
         return clean_urls
     
@@ -44,7 +48,7 @@ class ScraperV2:
     def _download_images(self, urls: list[str]) -> None:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
         
-        for url in urls:
+        for idx, url in enumerate(urls):
             print(url)
             try:
                 response = requests.get(url, headers=headers)
@@ -52,17 +56,20 @@ class ScraperV2:
                     response.raise_for_status()
                 except requests.exceptions.HTTPError as e:
                     print("DOWNLOAD ERROR:", e)
-                with open(self.output + str(rd.randint(1, 999999999999)) + ".jpg", "wb") as file:
+                with open(self.output + str(idx+1) + ".jpg", "wb") as file:
                     file.write(response.content)
             except Exception as e:
                 print(":C", e)
 
 
-    def _filter_urls(self, urls: list[str]) -> list[str]:
+    def _filter_urls(self, urls: list[str], hq: bool = True) -> list[str]:
         urls = list(filter(lambda u: "/photos/" in u, urls))
-        return list(map(lambda u: u.split("?auto")[0], urls))
+        if hq:  
+            return list(map(lambda u: u.split("?auto")[0], urls))
+        return urls
+        
         
 
 
-scr = ScraperV2("F:/Desktop/TEST/")
-scr.run("cat", 10)
+scr = ScraperV2("F:/Desktop/TEST_LOW/")
+scr.run("cat", 100, hq=False)
