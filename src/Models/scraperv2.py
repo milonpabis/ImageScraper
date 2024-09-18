@@ -5,15 +5,16 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import datetime as dt
 
 ENDPOINT = "https://www.pexels.com/search/"
 COOKIES_TEXT = "//span[text()='Accept All Cookies'] | //div[text()='Accept All Cookies'] | //button[text()='Accept All Cookies']"
 
 class ScraperV2:
 
+
     def __init__(self, output_path: str) -> None:
         self.output = output_path
+
 
     
     def run(self, word: str, num: int, hq: bool = True) -> None:
@@ -22,6 +23,7 @@ class ScraperV2:
 
         urls = self._get_urls(word, num, hq=hq)
         self._download_images(urls)
+
 
     
     def _get_urls(self, word: str, num: int, hq: bool = True) -> list[str]:
@@ -58,6 +60,7 @@ class ScraperV2:
 
         return clean_urls
     
+
 
     def _download_images(self, urls: list[str]) -> None:
         """
@@ -106,9 +109,7 @@ class ScraperV2:
         
         
 
-start = dt.datetime.now()
-scr = ScraperV2("F:/Desktop/images/fat_w/")
-scr.run("obese woman", 1000, hq=False)
-scr.set_output("F:/Desktop/images/fat_m/")
-scr.run("obese man", 1000, hq=False)
-print("EXECUTION TIME:", dt.datetime.now() - start)
+# start = dt.datetime.now()
+# scr = ScraperV2("F:/Desktop/testtest/")
+# scr.run("obese woman", 1000, hq=False)
+# print("EXECUTION TIME:", dt.datetime.now() - start)
