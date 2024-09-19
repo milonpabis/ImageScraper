@@ -3,7 +3,7 @@ from PySide6.QtCore import Qt, QSize, QThread, Signal, QRunnable, QThreadPool, S
 from PySide6.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QSlider, QLabel, QFileDialog,
                                QPushButton, QVBoxLayout, QLineEdit, QTextEdit)
 import threading
-from src.Scrapers.scraper import Scraper
+from src.Models.scraper import Scraper
 
 LOGO = 'images/google_logo.png'
 

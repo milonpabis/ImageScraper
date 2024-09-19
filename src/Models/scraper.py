@@ -1,5 +1,4 @@
 import os
-import selenium
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException, TimeoutException
@@ -7,55 +6,41 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import base64
 import time
-import requests
 from datetime import datetime
 import random as rd
+from typing import Coroutine
 
 import asyncio
 import aiohttp
 from pathlib import Path
 
-COOKIE_ACCEPT = '/html/body/c-wiz/div/div/div/div[2]/div[1]/div[3]/div[1]/div[1]/form[2]/div/div/button'
-MORE_BUTTON = '//*[@id="islmp"]/div/div/div[1]/div/div[2]/span'
-SCROLLS = 0
-DIR = 'product'
+from static import *
 
-COOKIES_XPATH = "/html/body/c-wiz/div/div/div/div[2]/div[1]/div[3]/div[1]/div[1]/form[2]/div/div/button/span"
-COOKIES_XPATH2 = "/html/body/c-wiz/div/div/div/div[2]/div[1]/div[3]/div[1]/div[1]/form[2]/div/div/button/div[3]"
-COOKIES_TEXT = "//span[text()='Accept all'] | //div[text()='Accept all']"
-
-
-MORE_BUTTON_1 = "//span[text()='Accept all'] | //div[text()='Accept all']"
 
 
 class Scraper:
 
+
     def __init__(self, image_name, directory=DIR):
-
-        chrome_options = webdriver.ChromeOptions()
-        #chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--disable-notifications")
-        chrome_options.add_argument("--lang=en-GB")
-
-        self.dir = directory
         self.name = image_name
-        self.endpoint = f'https://www.google.com/search?rlz=1C1YTUH_plPL1051PL1051&q={self.name}&tbm=isch&sa=X&ved' \
-                        f'=2ahUKEwjXg4Phle3_AhWQgSoKHb78AW0Q0pQJegQICxAB&biw=1182&bih=754&dpr=1.25 '
-        
-        self.path = Path(self.dir) / self.name
+        self.endpoint = ENDPOINT_GOOGLE % self.name
+        self.path = Path(directory) / self.name
 
+        chrome_options = self._get_chrome_options(headless=False)
         self.driver = webdriver.Chrome(options=chrome_options)
-        self.execute_and_encode()
+        self.execute_and_encode()   # starting the process
 
     
-    async def fetch_image(self, session: aiohttp.ClientSession, url: str) -> None:
+
+    async def fetch_image(self, session: aiohttp.ClientSession, url: str) -> Coroutine:
         im_path = Path(self.path) / self._get_random_name()
+        print("starting: ", url)
         if url.startswith("data"):
             extension = self._get_extension_data(url)
             try:
                 encoded_data = url.split(f'data:image/{extension};base64,')[1]
 
-                with open(im_path + '.jpg', 'wb') as file:
+                with open(im_path.with_suffix(".jpg"), 'wb') as file:
                     file.write(base64.b64decode(encoded_data))
 
             except Exception as exception_fetch_v1:
@@ -63,15 +48,17 @@ class Scraper:
                 
         else:
             async with session.get(url) as response:
-                with open(im_path + '.jpg', 'wb') as file:
+                with open(im_path.with_suffix(".jpg"), 'wb') as file:
                     file.write(await response.read())
 
     
-    async def download_images(self, urls: list) -> None:
+
+    async def download_images(self, urls: list) -> Coroutine:
         async with aiohttp.ClientSession() as session:
             # creating tasks for every url
             tasks = [self.fetch_image(session, url) for url in urls]
             await asyncio.gather(*tasks)
+
 
 
     def accept_cookies(self):
@@ -97,9 +84,11 @@ class Scraper:
                     time.sleep(30)
 
 
+
     def scroll_down(self):
         self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         
+
 
     def execute_and_encode(self):
         try:
@@ -119,36 +108,17 @@ class Scraper:
                 break
             
 
+
         time.sleep(1)
         images = self.driver.find_elements(By.TAG_NAME, 'img')
         print(len(images))
+        
+        urls = self._filter_images(images)
         self.driver.quit()
 
-        urls = [im.get_attribute("src") for im in images if im.get_attribute("src") is not None and ]
+        asyncio.run(self.download_images(urls))
 
-
-        for im in images:
-            img_src = im.get_attribute('src')
-            height = im.get_attribute('height')
-            
-            if img_src is not None and "FAVICON" not in img_src and "google" not in img_src and int(height) > 60:
-                im_path = Path(self.path) / self._get_random_name()
-
-                print(img_src)
-                if img_src.startswith('data'):
-                    extension = self._get_extension_data(img_src)
-
-                    to_decode = img_src.split(f'data:image/{extension};base64,')
-
-                    if len(to_decode) > 1:
-                        with open(im_path + f'.jpg', 'wb') as file:
-                            file.write(base64.b64decode(to_decode[1]))
-                else:
-                    respond = requests.get(img_src)
-                    with open(im_path + '.jpg', 'wb') as file:
-                        file.write(respond.content)
-        time.sleep(3)
-        print('finished')
+        print("finished")
 
     
     def _get_extension_data(self, url: str) -> str:
@@ -162,5 +132,19 @@ class Scraper:
         return f"{self.name}{rd.randint(0, 999999999)}"
     
 
-    def _check_url(self, url: str) -> bool:
+    def _check_image(self, image) -> bool:
+        url, height = image.get_attribute('src'), image.get_attribute('height')
         return url is not None and "FAVICON" not in url and "google" not in url and int(height) > 60
+    
+
+    def _filter_images(self, images) -> list:
+        return [image.get_attribute("src") for image in images if self._check_image(image)]
+    
+
+    def _get_chrome_options(self, headless: bool = False) -> webdriver.ChromeOptions:
+        chrome_options = webdriver.ChromeOptions()
+        if headless:
+            chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--disable-notifications")
+        chrome_options.add_argument("--lang=en-GB")
+        return chrome_options
