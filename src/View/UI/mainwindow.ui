@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>589</width>
+    <height>565</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QFrame" name="frame">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>150</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>150</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(231, 231, 231);</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QFrame" name="frame_4">
+         <property name="maximumSize">
+          <size>
+           <width>110</width>
+           <height>110</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QLabel" name="l_logo">
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>100</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>100</width>
+              <height>100</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFrame" name="frame_5">
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="font">
+             <font>
+              <family>Miriam Libre</family>
+              <pointsize>24</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Image Scraper</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QFrame" name="frame_2">
+      <property name="styleSheet">
+       <string notr="true">#frame_2{
+background-color: rgba(0,0,0,120);
+}</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QFrame" name="frame_6">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgba(0,0,0,140);</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <item>
+           <widget class="QTextEdit" name="te_words">
+            <property name="maximumSize">
+             <size>
+              <width>400</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgba(255,255,255,200);</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Plain</enum>
+            </property>
+            <property name="horizontalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOff</enum>
+            </property>
+            <property name="overwriteMode">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QFrame" name="frame_3">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>100</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>100</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">#frame_3 {
+background-color: rgb(231, 231, 231);
+}</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <property name="leftMargin">
+        <number>200</number>
+       </property>
+       <property name="rightMargin">
+        <number>200</number>
+       </property>
+       <item>
+        <widget class="QPushButton" name="bt_dir">
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>80</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>64</width>
+           <height>64</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="bt_start">
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>80</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>64</width>
+           <height>64</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
