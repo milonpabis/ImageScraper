@@ -19,15 +19,8 @@ from static import *
 
 class Scraper:
 
-
-    def __init__(self, image_name, directory=DIR):
-        self.name = image_name
-        self.endpoint = ENDPOINT_GOOGLE % self.name
-        self.path = Path(directory) / self.name
-
-        chrome_options = self._get_chrome_options(headless=False)
-        self.driver = webdriver.Chrome(options=chrome_options)
-        self.execute_and_encode()   # starting the process
+    def __init__(self):
+        self.driver = None
 
     
     async def fetch_image(self, session: aiohttp.ClientSession, url: str) -> Coroutine:
@@ -76,15 +69,20 @@ class Scraper:
             tasks = [self.fetch_image(session, url) for url in urls]
             await asyncio.gather(*tasks)
 
-    def execute_and_encode(self) -> None:
+    def execute_and_encode(self, image_name: str, directory: str = DIR) -> None:
         """
         Starts all the processes in order to downlad the images.
         """
+        self.name = image_name
+        self.endpoint = ENDPOINT_GOOGLE % self.name
+        self.path = Path(directory) / self.name
+
         try:    # creating a directory for the images
             self.path.mkdir(parents=True, exist_ok=True)
         except Exception as exception_mkdir:
             print(exception_mkdir)
 
+        self.start_browser(headless=True)    # starting the browser
         self.driver.get(self.endpoint)  # opening the google images page
         self._accept_cookies()
         self._render_images()   # scrolling down for 10s
@@ -97,6 +95,13 @@ class Scraper:
 
         asyncio.run(self.download_images(urls))  # downloading the images asynchronously
         print("finished")
+
+    def start_browser(self, headless: bool = False) -> None:
+        """
+        Starts the browser with the given options.
+        """
+        chrome_options = self._get_chrome_options(headless)
+        self.driver = webdriver.Chrome(options=chrome_options)
 
     
 

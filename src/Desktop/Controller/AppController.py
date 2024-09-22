@@ -1,15 +1,15 @@
-import threading
-
-
 from src.Models.scraper import Scraper
-from src.View.UI.ViewMain import ViewMain
+from src.Models.scraperv2 import ScraperV2
+from src.Desktop.View.ViewMain import ViewMain
 
+import threading
+from copy import deepcopy
 from typing import List
 
 
 class AppController:
 
-    def __init__(self, *args, view: ViewMain = None, model: Scraper = None, **kwargs):
+    def __init__(self, *args, view: ViewMain = None, model: Scraper | ScraperV2 = None, **kwargs):
         self.view = view
         self.model = model
         self._connect_buttons()
@@ -25,7 +25,7 @@ class AppController:
             print(exception_input)
 
         self.run_threads(items)
-        
+
     def run_threads(self, items: List[str]) -> None:
         """
         Runs scraping tasks in separate threads for each item in the list.
@@ -35,6 +35,7 @@ class AppController:
             for item in items:
                 thread = threading.Thread(target=self._run_task, args=(item, self.view.directory))
                 thread.start()
+        self.view.bt_start.setEnabled(True)
 
 
     def _read_input(self) -> List[str]:
@@ -42,7 +43,8 @@ class AppController:
         return items
     
     def _run_task(self, text: str, directory: str) -> None:
-        Scraper(text, directory)
+        model_instance = deepcopy(self.model)
+        model_instance.execute_and_encode(text, directory)
 
     def _connect_buttons(self) -> None:
         self.view.bt_start.clicked.connect(self.start_scraping)

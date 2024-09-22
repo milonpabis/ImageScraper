@@ -16,7 +16,6 @@ class ScraperV2:
         self.output = output_path
 
 
-    
     def run(self, word: str, num: int, hq: bool = True) -> None:
         if not os.path.exists(self.output):
             os.makedirs(self.output, exist_ok=True)
@@ -59,8 +58,6 @@ class ScraperV2:
         clean_urls = self._filter_urls(urls, hq=hq)
 
         return clean_urls
-    
-
 
     def _download_images(self, urls: list[str]) -> None:
         """
@@ -86,7 +83,6 @@ class ScraperV2:
             except Exception as e:
                 print(":C", e)
 
-
     def _filter_urls(self, urls: list[str], hq: bool = True) -> list[str]:
         """
         Filters the urls to skip icons and other non-image urls.
@@ -103,7 +99,6 @@ class ScraperV2:
             return list(map(lambda u: u.split("?auto")[0], urls))
         return urls
     
-
     def set_output(self, path: str) -> None:
         self.output = path
         

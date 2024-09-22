@@ -1,20 +1,14 @@
-from src.View.gui import Gui, QApplication
-from src.Models.scraper import Scraper
-from src.Controller.AppController import AppController
+from src.DesktopApplication import DesktopApplication
+from src.Web.app import app
 
-
-from src.View.UI.ViewMain import ViewMain
-
-UI_TEST = 1
+webapp = True
 
 if __name__ == "__main__":
-    if UI_TEST:
-        app = QApplication()
-        gui = ViewMain()
-        gui.show()
-        app.exec()
+    if webapp:
+        app.run(debug=True)
     else:
-        controller = AppController(view=Gui(), model=Scraper())
+        desktop_app = DesktopApplication()
+        desktop_app.run()
 
 
 

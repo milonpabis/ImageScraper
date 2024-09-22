@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo-header">
+            <div class="logo-container">
+                <img style="width: 100px" src="static/images/google_logo.png" alt="Google Logo">
+            </div>
+            <div class="title-container">Image Scraper</div>
+        </div>
+    </header>
+    <main>
+        <form id="keywordForm">
+            <div id="keywordButtonsAddRemove">
+                <button class="btn-submit" type="button" onclick="addKeywordInput()">+</button>
+                <button class="btn-submit" type="button" onclick="removeKeywordInput()">-</button>
+            </div>
+
+            <div id="keywordContainer">
+                <div class="keyword-input">
+                    <input class="input-text" type="text" name="keywords[]" placeholder="Enter keyword">
+                </div>
+            </div>
+            
+            
+            <button class="btn-submit" type="submit">Download</button>
+            
+        </form>
+    </main>
+    
+    <footer>
+        <p>&copy; 2024 Google Image Scraper</p>
+
+    </footer>
+</body>
+</html>
+
+
+
+<script>
+    function addKeywordInput() {
+        const container = document.getElementById('keywordContainer');
+        if (container.children.length >= 5) {
+            return;
+        }
+        const inputDiv = document.createElement('div');
+        inputDiv.className = 'keyword-input';
+        inputDiv.innerHTML = '<input class="input-text" type="text" name="keywords[]" placeholder="Enter keyword">';
+        container.appendChild(inputDiv);
+    }
+
+    function removeKeywordInput() {
+        const container = document.getElementById("keywordContainer");
+        if (container.children.length === 1) {
+            return;
+        }
+        container.removeChild(container.lastElementChild);
+    }
+
+    document.getElementById('keywordForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const keywords = Array.from(document.querySelectorAll('input[name="keywords[]"]')).map(input => input.value);
+        console.log(keywords);
+        // You can now use the keywords array as needed
+    });
+</script>
