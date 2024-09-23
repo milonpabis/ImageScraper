@@ -16,22 +16,25 @@
         </div>
     </header>
     <main>
-        <form id="keywordForm">
+        <form id="keywordForm" method="post">
             <div id="keywordButtonsAddRemove">
                 <button class="btn-submit" type="button" onclick="addKeywordInput()">+</button>
                 <button class="btn-submit" type="button" onclick="removeKeywordInput()">-</button>
             </div>
-
             <div id="keywordContainer">
                 <div class="keyword-input">
                     <input class="input-text" type="text" name="keywords[]" placeholder="Enter keyword">
                 </div>
             </div>
-            
-            
-            <button class="btn-submit" type="submit">Download</button>
-            
+            <button class="btn-submit" type="submit" onclick="showWaitingInfo()">Download</button>
         </form>
+
+        <div id="waiting-info-container" style="display: none;">
+            <div id="waiting-info" class="hidden">
+                <p id="waiting-text">Downloading images...</p>
+                <div class="loader"></div>
+            </div>
+        </div>
     </main>
     
     <footer>
@@ -63,10 +66,8 @@
         container.removeChild(container.lastElementChild);
     }
 
-    document.getElementById('keywordForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const keywords = Array.from(document.querySelectorAll('input[name="keywords[]"]')).map(input => input.value);
-        console.log(keywords);
-        // You can now use the keywords array as needed
-    });
+    function showWaitingInfo() {
+        const waitingInfo = document.getElementById('waiting-info-container');
+        waitingInfo.style.display = "flex";
+    }
 </script>

@@ -26,13 +26,17 @@ h1 {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: rgba(0,0,0,0.8);
+    width: 35%;
+    padding: 20px;
+    border-radius: 25px;
+    box-shadow: 0 0 10px 5px rgba(0,0,0,0.5);
 
 }
 
 #keywordContainer {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     margin: 10px;
 }
@@ -73,6 +77,8 @@ footer {
     margin: 10px;
     padding: 10px;
     font-size: 1.5em;
+    font-weight: bold;
+    font-family:'Courier New', Courier, monospace;
     
 }
 
@@ -96,15 +102,15 @@ footer {
   content: "";
   background: linear-gradient(
     45deg,
-    #ff0000,
-    #ff7300,
-    #fffb00,
-    #48ff00,
-    #00ffd5,
-    #002bff,
-    #7a00ff,
-    #ff00c8,
-    #ff0000
+    #7806f2,
+    #6d06da,
+    #5c0cb1,
+    #4e1888,
+    #7030b5,
+    #8533dc,
+    #9344e8,
+    #a25ee9,
+    #c9a6ee
   );
   position: absolute;
   top: -2px;
@@ -149,6 +155,10 @@ footer {
     transform: scale(1.05);
 }
 
+.btn-submit:hover:before {
+  background: white;
+}
+
 input {
     font-size: 14px;
     border-radius: 6px;
@@ -160,6 +170,8 @@ input {
     background: #dee1e2;
     display: block;
     height: 36px;  
+    font-weight: bold;
+    font-family:'Courier New', Courier, monospace;
 }
 
 input:hover {
@@ -194,4 +206,75 @@ input:focus{
 
 body {
   background-image: url("images/testbg2.jpg");
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#waiting-info-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0,0,0,0.8);
+  width: 35%;
+  padding: 20px;
+  border-radius: 25px;
+  box-shadow: 0 0 10px 5px rgba(0,0,0,0.5);
+  color: white;
+  font-size: 1.5em;
+  font-weight: bold;
+  font-family: "Courier New", Courier, monospace;
+  margin-top: 50px;
+}
+
+.loader {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+}
+
+.loader::after {
+content: "";
+border: 5px solid rgba(255, 255, 255, 0.3);
+border-top: 5px solid white;
+border-radius: 50%;
+width: 40px;
+height: 40px;
+animation: spin 1s linear infinite;
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+0% {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+100% {
+  transform: translate(-50%, -50%) rotate(360deg);
+}
+}
+
+
+#waiting-text {
+    animation: pulse 2s infinite;
+  }
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
