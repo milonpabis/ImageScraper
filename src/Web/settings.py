@@ -1,1 +1,3 @@
 TEMP_DIRECTORY = "src/Web/tmp"
+
+MIN_IMAGE_WIDTH = 10
