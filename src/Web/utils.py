@@ -1,30 +1,64 @@
 import os
-from pathlib import Path, WindowsPath
-from src.Web.settings import *
-import uuid
 import io
-from PIL import Image, UnidentifiedImageError
-import zipfile
+from pathlib import Path, WindowsPath
+import uuid
+import queue
 from typing import Iterable
+
 from src.Models.scraper import Scraper
+from src.Web.settings import *
+import threading
+import zipfile
+from PIL import Image, UnidentifiedImageError
 
 
-def run_process(keyword: str) -> io.BytesIO | None:
+def compress_all(keywords: Iterable[str]) -> io.BytesIO | None:
+    """
+    Compresses all the images from the given keywords to a single zip file.
+    For every keyword it also makes a sub zip file.
+    Runs the process for each keyword in a separate thread.
+    """
+    threads = []
+    result_queue = queue.Queue()
+    try:
+        for keyword in keywords:
+            if keyword:
+                thread = threading.Thread(target=run_process, args=(keyword, result_queue, id))
+                threads.append(thread)
+                thread.start()
+                
+                for thread in threads:
+                    thread.join() # waiting for all threads to finish
+                
+                # creating a main zip file
+                zip_data = io.BytesIO()
+                with zipfile.ZipFile(zip_data, "w") as zipf:
+                    while not result_queue.empty():
+                        kw, data = result_queue.get() # getting the sub zip data for every keyword
+                        zipf.writestr(f"{kw}.zip", data.getvalue()) # writing the data to the main zip file
+                zip_data.seek(0)
+    except Exception as exception_compress_all:
+        print("COMPRESS ALL :", exception_compress_all)
+        return None
+    return zip_data
+
+
+
+def run_process(keyword: str, result_queue: queue.Queue, path_name: str) -> io.BytesIO | None:
     """
     Runs a single instance of the scraper.
     """
-    id = str(generate_unique_id()) # generating unique id for the folder
-    create_dir_if_not_exists(id)
+    create_dir_if_not_exists(path_name) # creating a directory for the downloads
     scraper = Scraper()
-    scraper.execute_and_encode(keyword, Path(TEMP_DIRECTORY) / id)
+    scraper.execute_and_encode(keyword, Path(TEMP_DIRECTORY) / path_name)
 
-    image_folder = Path(TEMP_DIRECTORY) / id / keyword
+    image_folder = Path(TEMP_DIRECTORY) / path_name / keyword
     images_data = [image_to_bytes(image_folder / file_name) for file_name in os.listdir(image_folder) 
                         if is_image(image_folder / file_name)]  # converting images to bytes
     
     zip_data = compress_images(images_data) # compressing images from one keyword to a zip file
 
-    return id, zip_data
+    result_queue.put((keyword, zip_data))
 
 
 def compress_images(images_data: Iterable[io.BytesIO]) -> io.BytesIO | None:
