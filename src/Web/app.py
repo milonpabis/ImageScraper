@@ -25,8 +25,9 @@ def home():
 
 @app.route("/download/<zip_id>", methods=["GET"])
 def download_complete(zip_id):
-    zip_file = zip_storage.get(zip_id)
-    zip_storage = {} # removing the zip file from memory
+    global zip_storage
+    zip_file = zip_storage.pop(zip_id, None) # getting the zip file from memory
     if zip_file:
         return send_file(zip_file, as_attachment=True, download_name=f"{zip_id}.zip")
-    return "File not found", 404
+    else:
+        return "File not found", 404

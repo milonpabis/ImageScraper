@@ -23,20 +23,20 @@ def compress_all(keywords: Iterable[str]) -> io.BytesIO | None:
     try:
         for keyword in keywords:
             if keyword:
-                thread = threading.Thread(target=run_process, args=(keyword, result_queue, id))
+                thread = threading.Thread(target=run_process, args=(keyword, result_queue, keyword))
                 threads.append(thread)
                 thread.start()
                 
-                for thread in threads:
-                    thread.join() # waiting for all threads to finish
+        for thread in threads:
+            thread.join() # waiting for all threads to finish
                 
-                # creating a main zip file
-                zip_data = io.BytesIO()
-                with zipfile.ZipFile(zip_data, "w") as zipf:
-                    while not result_queue.empty():
-                        kw, data = result_queue.get() # getting the sub zip data for every keyword
-                        zipf.writestr(f"{kw}.zip", data.getvalue()) # writing the data to the main zip file
-                zip_data.seek(0)
+        # creating a main zip file
+        zip_data = io.BytesIO()
+        with zipfile.ZipFile(zip_data, "w") as zipf:
+            while not result_queue.empty():
+                kw, data = result_queue.get() # getting the sub zip data for every keyword
+                zipf.writestr(f"{kw}.zip", data.getvalue()) # writing the data to the main zip file
+        zip_data.seek(0)
     except Exception as exception_compress_all:
         print("COMPRESS ALL :", exception_compress_all)
         return None
@@ -53,7 +53,7 @@ def run_process(keyword: str, result_queue: queue.Queue, path_name: str) -> io.B
     scraper.execute_and_encode(keyword, Path(TEMP_DIRECTORY) / path_name)
 
     image_folder = Path(TEMP_DIRECTORY) / path_name / keyword
-    images_data = [image_to_bytes(image_folder / file_name) for file_name in os.listdir(image_folder) 
+    images_data = [image_to_bytes(image_folder / file_name) for file_name in os.listdir(image_folder)
                         if is_image(image_folder / file_name)]  # converting images to bytes
     
     zip_data = compress_images(images_data) # compressing images from one keyword to a zip file
