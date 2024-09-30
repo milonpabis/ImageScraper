@@ -1,15 +1,36 @@
-# ImageScraper
-App that webscrapes on Google Images
+# Image Dataset Generator
+Simple asynchronous image generator, scraping images from Google images.
+Can run up to 6 different keywords, each on separate thread, downloading them asynchronously.
 
-## Info:
-### App webscrapes on google images, downloading all available images and saving them at given directory with given name_x.jpeg
-### Estimated time ~ 1 minute 
-### Estimated image number depends on phrase popularity ( ex. Car ~ 300, your_name_city ~ 0-100 )
-### Images might be not accurate when giving the strange phrase
+Creates a compressed file containing images for every specified keywords.
+You can get ~700 images per keyword on average.
 
-## Images:
+### Build the container
+```
+docker build -t <name> .
+```
+### Run the container
+```
+docker run -p 5000:5000 <name>
+```
 
-![SCRAP_1](https://github.com/milonpabis/ImageScraper/assets/116438884/467b61a6-55cf-43ac-892b-fa33a3fe26c9)
+# Preview
 
-![SCRAP_2](https://github.com/milonpabis/ImageScraper/assets/116438884/53c06156-2519-49f2-9e02-fd8c5de9ea6a)
+|<img src="https://github.com/user-attachments/assets/c77e5a6c-9952-4a20-949a-5ddaee6c2b92">|
+|---|
+|<img src="https://github.com/user-attachments/assets/d4c72999-1334-4c9c-826b-f270a673542a">|
+
+
+|![dog](https://github.com/user-attachments/assets/e602e36e-3cf8-4b46-983e-ac3227fde03f)|![mouse](https://github.com/user-attachments/assets/77cb96a8-0b82-42f5-8a3d-088c79343c25)|
+|---|---|
+|![cat](https://github.com/user-attachments/assets/bd911feb-f7e9-4227-bd9c-e1ea47533373)|![ant](https://github.com/user-attachments/assets/750d625a-fe91-419c-9770-43e4233269e1)|
+
+
+
+
+
+
+
+
+
 
